@@ -59,4 +59,4 @@ Thumbs.db
 
 .keep
 tmp/*
-/coverage/*
+/coverage/
