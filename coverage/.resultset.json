@@ -1,0 +1,167 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/rails/app/helpers/application_helper.rb": {
+        "lines": [
+          1,
+          null
+        ]
+      },
+      "/rails/app/helpers/tasks_helper.rb": {
+        "lines": [
+          1,
+          null
+        ]
+      },
+      "/rails/app/controllers/tasks_controller.rb": {
+        "lines": [
+          1,
+          1,
+          null,
+          null,
+          1,
+          10,
+          null,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          5,
+          null,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          10,
+          null,
+          10,
+          10,
+          9,
+          6,
+          null,
+          9,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          10,
+          10,
+          9,
+          6,
+          null,
+          9,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          5,
+          null,
+          5,
+          9,
+          6,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          26,
+          null,
+          null,
+          null,
+          1,
+          20,
+          null,
+          null
+        ]
+      },
+      "/rails/app/controllers/application_controller.rb": {
+        "lines": [
+          1,
+          null,
+          1,
+          null
+        ]
+      },
+      "/rails/app/models/task.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          1,
+          null,
+          2,
+          4,
+          null,
+          1,
+          4,
+          null,
+          null,
+          1,
+          5,
+          null,
+          null
+        ]
+      },
+      "/rails/app/models/application_record.rb": {
+        "lines": [
+          1,
+          1,
+          null
+        ]
+      },
+      "/rails/app/channels/application_cable/channel.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/rails/app/channels/application_cable/connection.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      },
+      "/rails/app/jobs/application_job.rb": {
+        "lines": [
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0
+        ],
+        "branches": {}
+      },
+      "/rails/app/mailers/application_mailer.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {}
+      }
+    },
+    "timestamp": 1749756104
+  }
+}

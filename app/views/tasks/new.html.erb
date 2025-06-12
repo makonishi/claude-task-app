@@ -1,0 +1,8 @@
+<% content_for :title, "New task" %>
+
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-gray-900">Create New Task</h1>
+  <p class="mt-2 text-sm text-gray-700">Fill in the details below to create a new task</p>
+</div>
+
+<%= render "form", task: @task %>
