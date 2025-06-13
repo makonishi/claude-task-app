@@ -27,7 +27,6 @@ services:
       DATABASE_HOST: db
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
-      RAILS_ENV: ${RAILS_ENV:-development}
     stdin_open: true
     tty: true
 
