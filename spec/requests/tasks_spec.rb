@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe TasksController, type: :controller do
+RSpec.describe "Tasks", type: :request do
   let(:valid_attributes) {
     {
       title: 'Test Task',
@@ -19,112 +19,114 @@ RSpec.describe TasksController, type: :controller do
     }
   }
 
-  describe "GET #index" do
+  describe "GET /tasks" do
     it "returns a success response" do
-      get :index
+      get tasks_path
       expect(response).to be_successful
     end
 
-    it "assigns all tasks as @tasks" do
+    it "displays all tasks" do
       task = Task.create! valid_attributes
-      get :index
-      expect(assigns(:tasks)).to include(task)
+      get tasks_path
+      expect(response.body).to include(task.title)
     end
   end
 
-  describe "GET #show" do
+  describe "GET /tasks/:id" do
     it "returns a success response" do
       task = Task.create! valid_attributes
-      get :show, params: {id: task.to_param}
+      get task_path(task)
       expect(response).to be_successful
     end
 
-    it "assigns the requested task as @task" do
+    it "displays the requested task" do
       task = Task.create! valid_attributes
-      get :show, params: {id: task.to_param}
-      expect(assigns(:task)).to eq(task)
+      get task_path(task)
+      expect(response.body).to include(task.title)
+      expect(response.body).to include(task.description)
     end
   end
 
-  describe "GET #new" do
+  describe "GET /tasks/new" do
     it "returns a success response" do
-      get :new
+      get new_task_path
       expect(response).to be_successful
     end
 
-    it "assigns a new task as @task" do
-      get :new
-      expect(assigns(:task)).to be_a_new(Task)
+    it "displays the new task form" do
+      get new_task_path
+      expect(response.body).to include('New task')
     end
   end
 
-  describe "GET #edit" do
+  describe "GET /tasks/:id/edit" do
     it "returns a success response" do
       task = Task.create! valid_attributes
-      get :edit, params: {id: task.to_param}
+      get edit_task_path(task)
       expect(response).to be_successful
     end
 
-    it "assigns the requested task as @task" do
+    it "displays the edit form with task data" do
       task = Task.create! valid_attributes
-      get :edit, params: {id: task.to_param}
-      expect(assigns(:task)).to eq(task)
+      get edit_task_path(task)
+      expect(response.body).to include(task.title)
     end
   end
 
-  describe "POST #create" do
+  describe "POST /tasks" do
     context "with valid params" do
       it "creates a new Task" do
         expect {
-          post :create, params: {task: valid_attributes}
+          post tasks_path, params: { task: valid_attributes }
         }.to change(Task, :count).by(1)
       end
 
       it "redirects to the created task" do
-        post :create, params: {task: valid_attributes}
+        post tasks_path, params: { task: valid_attributes }
         expect(response).to redirect_to(Task.last)
       end
 
       it "sets a success notice" do
-        post :create, params: {task: valid_attributes}
-        expect(flash[:notice]).to eq("Task was successfully created.")
+        post tasks_path, params: { task: valid_attributes }
+        follow_redirect!
+        expect(response.body).to include("Task was successfully created.")
       end
     end
 
     context "with invalid params" do
       it "does not create a new Task" do
         expect {
-          post :create, params: {task: invalid_attributes}
+          post tasks_path, params: { task: invalid_attributes }
         }.to change(Task, :count).by(0)
       end
 
       it "returns a unprocessable entity response" do
-        post :create, params: {task: invalid_attributes}
+        post tasks_path, params: { task: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "renders the new template" do
-        post :create, params: {task: invalid_attributes}
-        expect(response).to render_template("new")
+        post tasks_path, params: { task: invalid_attributes }
+        expect(response.body).to include('New task')
       end
     end
 
     context "with JSON format" do
       it "creates a new Task and returns created status" do
-        post :create, params: {task: valid_attributes, format: :json}
+        post tasks_path, params: { task: valid_attributes }, headers: { 'Accept': 'application/json' }
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
 
       it "returns unprocessable entity status for invalid params" do
-        post :create, params: {task: invalid_attributes, format: :json}
+        post tasks_path, params: { task: invalid_attributes }, headers: { 'Accept': 'application/json' }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
     end
   end
 
-  describe "PUT #update" do
+  describe "PUT /tasks/:id" do
     context "with valid params" do
       let(:new_attributes) {
         {
@@ -135,7 +137,7 @@ RSpec.describe TasksController, type: :controller do
 
       it "updates the requested task" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: new_attributes}
+        put task_path(task), params: { task: new_attributes }
         task.reload
         expect(task.title).to eq('Updated Task')
         expect(task.status).to eq('completed')
@@ -143,14 +145,15 @@ RSpec.describe TasksController, type: :controller do
 
       it "redirects to the task" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: valid_attributes}
+        put task_path(task), params: { task: valid_attributes }
         expect(response).to redirect_to(task)
       end
 
       it "sets a success notice" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: valid_attributes}
-        expect(flash[:notice]).to eq("Task was successfully updated.")
+        put task_path(task), params: { task: valid_attributes }
+        follow_redirect!
+        expect(response.body).to include("Task was successfully updated.")
       end
     end
 
@@ -158,65 +161,66 @@ RSpec.describe TasksController, type: :controller do
       it "does not update the task" do
         task = Task.create! valid_attributes
         original_title = task.title
-        put :update, params: {id: task.to_param, task: invalid_attributes}
+        put task_path(task), params: { task: invalid_attributes }
         task.reload
         expect(task.title).to eq(original_title)
       end
 
       it "returns a unprocessable entity response" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: invalid_attributes}
+        put task_path(task), params: { task: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "renders the edit template" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: invalid_attributes}
-        expect(response).to render_template("edit")
+        put task_path(task), params: { task: invalid_attributes }
+        expect(response.body).to include('Editing task')
       end
     end
 
     context "with JSON format" do
       it "updates the task and returns ok status" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: valid_attributes, format: :json}
+        put task_path(task), params: { task: valid_attributes }, headers: { 'Accept': 'application/json' }
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
 
       it "returns unprocessable entity status for invalid params" do
         task = Task.create! valid_attributes
-        put :update, params: {id: task.to_param, task: invalid_attributes, format: :json}
+        put task_path(task), params: { task: invalid_attributes }, headers: { 'Accept': 'application/json' }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
     end
   end
 
-  describe "DELETE #destroy" do
+  describe "DELETE /tasks/:id" do
     it "destroys the requested task" do
       task = Task.create! valid_attributes
       expect {
-        delete :destroy, params: {id: task.to_param}
+        delete task_path(task)
       }.to change(Task, :count).by(-1)
     end
 
     it "redirects to the tasks list" do
       task = Task.create! valid_attributes
-      delete :destroy, params: {id: task.to_param}
+      delete task_path(task)
       expect(response).to redirect_to(tasks_url)
     end
 
     it "sets a success notice" do
       task = Task.create! valid_attributes
-      delete :destroy, params: {id: task.to_param}
-      expect(flash[:notice]).to eq("Task was successfully destroyed.")
+      delete task_path(task)
+      follow_redirect!
+      expect(response.body).to include("Task was successfully destroyed.")
     end
 
     context "with JSON format" do
       it "returns no content status" do
         task = Task.create! valid_attributes
-        delete :destroy, params: {id: task.to_param, format: :json}
+        delete task_path(task), headers: { 'Accept': 'application/json' }
         expect(response).to have_http_status(:no_content)
       end
     end
